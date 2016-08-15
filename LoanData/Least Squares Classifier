@@ -1,0 +1,53 @@
+import numpy as np
+from sklearn import linear_model
+import matplotlib.pyplot as plt
+from reader import *
+
+corr = 0
+wrong = 0
+
+xTrain = Amatrix[:-7900]
+xTest = Amatrix[-7900:]
+
+
+
+yTrain = bvector[:-7900]
+yTest = bvector[-7900:]
+
+regr = linear_model.LinearRegression()
+
+regr.fit(xTrain,yTrain)
+
+output = (xTest * regr.coef_)
+for i in range(len(output)):
+	temp = np.sum(output[i])
+	if temp >= 0 and yTest[i] >= 0:
+		corr = corr + 1;
+	elif temp < 0 and yTest[i] < 0:
+		corr = corr + 1;
+	else:
+		wrong = wrong + 1;
+
+
+print(corr)
+print(wrong)
+
+print('Coefficients: \n', regr.coef_)
+print("Residual sum of squares: %.2f"
+	%np.mean((regr.predict(xTest)-yTest) ** 2))
+
+print('Variance score: %.2f' % regr.score(xTest,yTest))
+
+plt.scatter(xTest,yTest, color='black')
+plt.plot(xTest,regr.predict(xTest), color = 'blue', linewidth=3)
+
+plt.xticks(())
+plt.yticks(())
+
+plt.show()
+
+
+
+
+
+
